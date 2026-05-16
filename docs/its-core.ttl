@@ -1,0 +1,205 @@
+BASE   <https://w3id.org/itsdata/core/v1/>
+PREFIX : <https://w3id.org/itsdata/core/v1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX vann: <http://purl.org/vocab/vann/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX cdm2: <https://w3id.org/citydata/part2/v1/>
+PREFIX i72: <https://w3id.org/itsdata/i72/v1/>
+PREFIX its-core: <https://w3id.org/itsdata/core/v1/>
+its-core: a owl:Ontology;
+    # Ontology metadata
+    dcterms:title                  "ITS Core Ontology"@en;
+    skos:definition                "This ontology defines core concepts related to intelligent transport systems (ITS)."@en;
+    vann:preferredNamespaceUri     "https://w3id.org/itsdata/core/";
+    vann:preferredNamespacePrefix  "its-core";
+    dcterms:license                "http://creativecommons.org/licenses/by/4.0/";
+    its-core:draft                 "true";
+    
+    #Provenance metadata
+    dcterms:creator                "Kenneth Vaughn";
+    dcterms:created                "Draft";
+    dcterms:modified               "2026-04-07"^^xsd:date;
+    owl:versionInfo                "0.0.3";
+    owl:versionIRI                 its-core:r0.3;
+    owl:priorVersion               its-core:r0.2;
+    
+    # Imports
+    owl:imports                    cdm2:CityPattern .
+    # which includes the following cascade of imports:
+    #     LandUsePattern
+    #         CodePattern
+    #             Core(cdm2)
+    #             OrganizationStructurePattern
+    #                 AgentPattern
+    #                    GenericPropertiesPattern
+    #                    ResourcePattern
+    #                        ActivityPattern
+    #                            ChangePattern
+    #                            SpatialLocPattern
+    #                                MereologyPattern
+    #                        CityUnitsPattern
+    #                             ISO21972
+    #                             Core (cdm1)
+    #                                 Time (W3C)
+
+
+its-core:reqviewId a owl:AnnotationProperty;
+    rdfs:label "reqviewId" ;
+    rdfs:comment "An annotation property to link a requirement to its corresponding ReqView ID." .
+
+# Object properties
+its-core:ITSObjectProperty a owl:ObjectProperty;
+    skos:definition  "An object property to organize all object properties defined in all recognized ITS Ontologies." .
+
+its-core:fromCodeList
+    a owl:ObjectProperty ;
+    rdfs:subPropertyOf  its-core:ITSObjectProperty;
+    rdfs:domain its-core:Code ;
+    rdfs:range its-core:CodeList ;
+    skos:definition "Associates a code with the code list that defines it."@en .
+
+its-core:hasActivationStatus a owl:ObjectProperty;
+    skos:definition     "The activation status of the object.";
+    rdfs:subPropertyOf  its-core:ITSObjectProperty;
+    rdfs:range          its-core:ActivationStatusCode .
+
+its-core:hasJurisdiction a owl:ObjectProperty;
+    rdfs:subPropertyOf  its-core:ITSObjectProperty;
+    skos:definition     "The jurisdiction associated with the object.";
+    rdfs:range          cdm2:JurisdictionalArea .
+
+its-core:hasRegisteredCode
+    a owl:ObjectProperty ;
+    rdfs:subPropertyOf  its-core:ITSObjectProperty;
+    rdfs:domain its-core:CodeList ;
+    rdfs:range its-core:Code ;
+    skos:definition "Associates a code list with a registered member code."@en .
+
+its-core:managedBy
+    a owl:ObjectProperty ;
+    rdfs:subPropertyOf  its-core:ITSObjectProperty;
+    rdfs:domain its-core:CodeList ;
+    rdfs:range cdm2:Organization ;
+    skos:definition "Associates a code list with a registered member code."@en .
+
+# Datatype properties
+its-core:ITSDataProperty a owl:DataProperty;
+    skos:definition  "A datatype property to organize all datatype properties defined in all recognized ITS Ontologies." .
+
+its-core:hasImage a owl:DataProperty;
+    skos:definition     "The binary content of an image embedded as base64-encoded bytes.";
+    rdfs:subPropertyOf  its-core:ITSDataProperty;
+    rdfs:range          xsd:base64Binary .
+
+its-core:hasUrl a owl:DataProperty;
+    skos:definition     "The URL associated with the object.";
+    rdfs:subPropertyOf  its-core:ITSDataProperty;
+    rdfs:range          xsd:anyURI .
+
+its-core:hasVersion a owl:DataProperty;
+    rdfs:subPropertyOf  its-core:ITSDataProperty;
+    skos:definition     "The version of the object." .
+
+its-core:codeValue
+    a owl:DatatypeProperty ;
+    rdfs:subPropertyOf  its-core:ITSDataProperty;
+    rdfs:domain its-core:Code ;
+    rdfs:range xsd:string ;
+    skos:definition "The lexical value of a code."@en .
+
+its-core:hasMaintainer
+    a owl:DatatypeProperty ;
+    rdfs:subPropertyOf  its-core:ITSDataProperty;
+    rdfs:domain its-core:CodeList ;
+    rdfs:range xsd:string ;
+    skos:definition "The maintainer of the code list (free-text identifier; can be replaced with a richer organization model later)."@en .
+
+its-core:hasName
+    a owl:DatatypeProperty ;
+    rdfs:subPropertyOf  its-core:ITSDataProperty;
+    rdfs:domain its-core:CodeList ;
+    rdfs:range rdf:langString ;
+    skos:definition "A human-readable name for the code list."@en .
+
+its-core:hasVersion
+    a owl:DatatypeProperty ;
+    rdfs:subPropertyOf  its-core:ITSDataProperty;
+    rdfs:domain its-core:CodeList ;
+    rdfs:range xsd:string ;
+    skos:definition "Version identifier for the code list."@en .
+
+its-core:lastModified
+    a owl:DatatypeProperty ;
+    rdfs:subPropertyOf  its-core:ITSDataProperty;
+    rdfs:domain its-core:CodeList ;
+    rdfs:range xsd:date ;
+    skos:definition "Date the code list was last modified."@en .
+
+# Classes
+its-core:ITSThing a owl:Class;
+    skos:definition  "A class to organize all classes defined in all recognized ITS Ontologies." .
+
+its-core:ActivationStatusCode a owl:Class;
+    skos:definition  "A code indicating the activation status of an object";
+    skos:example     "active, beingSetUp, beingShutDown, inactive, scheduled";
+    rdfs:subClassOf  its-core:ITSThing;
+    rdfs:subClassOf  its-core:Code .
+
+its-core:Code
+    a owl:Class ;
+    skos:definition "A code value whose meaning is defined by membership in (or reference to) a code list."@en ;
+    rdfs:subClassOf  its-core:ITSThing;
+    rdfs:subClassOf  cdm2:Code .
+
+its-core:CodeList
+    a owl:Class ;
+    skos:definition "A curated set of codes (a code list), typically maintained and versioned by some entity."@en ;
+    rdfs:subClassOf  its-core:ITSThing.
+
+its-core:Angle
+    rdf:type        owl:Class ;
+    rdfs:subClassOf its-core:ITSThing ;
+    rdfs:subClassOf i72:Quantity ;
+    rdfs:subClassOf [
+        owl:allValuesFrom [
+            owl:intersectionOf ( i72:Measure [
+                owl:allValuesFrom :AngleUnit ;
+                owl:onProperty    i72:unit_of_measure ;
+                rdf:type          owl:Restriction ;
+            ] ) ;
+            rdf:type           owl:Class ;
+        ] ;
+        owl:onProperty    i72:value ;
+        rdf:type          owl:Restriction ;
+    ] ;
+    skos:definition "An angle defined by two lines."@en .
+
+its-core:AngleUnit
+    rdf:type        owl:Class ;
+    rdfs:subClassOf its-core:ITSThing ;
+    rdfs:subClassOf i72:Unit_of_measure ;
+    skos:definition "A specified system of units for angles."@en .
+
+its-core:Direction
+    rdf:type        owl:Class ;
+    rdfs:subClassOf its-core:ITSThing ;
+    skos:definition "The orientation of a line or movement."@en .
+
+its-core:Bearing
+    rdf:type        owl:Class ;
+    rdfs:subClassOf its-core:Direction ;
+    rdfs:subClassOf its-core:Angle ;
+    skos:definition "The orientation of a line or movement, measured from north (0°) clockwise."@en ;
+    skos:example    "0°, 90°, 180°, 270°, 360°"@en .
+
+its-core:DirectionCode
+    rdf:type        owl:Class ;
+    rdfs:subClassOf its-core:Direction ;
+    rdfs:subClassOf its-core:Code ;
+    skos:definition "A code representing orientation of a line or movement."@en ;
+    skos:example     "north, inbound, positive, clockwise"@en .
+

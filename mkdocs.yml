@@ -3,7 +3,27 @@ site_description: An site explaining core concepts within the overall set of ITS
 repo_url: https://github.com/ISO-TC204/ontology-its-core
 nav:
 - Home: index.md
-- ITS Class: ITSClass.md
+- Classes:
+  - Activation Status Code: classes/ActivationStatusCode.md
+  - Angle: classes/Angle.md
+  - Angle Unit: classes/AngleUnit.md
+  - Bearing: classes/Bearing.md
+  - Code: classes/Code.md
+  - Code List: classes/CodeList.md
+  - Direction: classes/Direction.md
+  - Direction Code: classes/DirectionCode.md
+- Properties:
+  - codeValue: properties/codeValue.md
+  - fromCodeList: properties/fromCodeList.md
+  - hasActivationStatus: properties/hasActivationStatus.md
+  - hasJurisdiction: properties/hasJurisdiction.md
+  - hasMaintainer: properties/hasMaintainer.md
+  - hasName: properties/hasName.md
+  - hasRegisteredCode: properties/hasRegisteredCode.md
+  - hasVersion: properties/hasVersion.md
+  - ITSObjectProperty: properties/ITSObjectProperty.md
+  - lastModified: properties/lastModified.md
+  - managedBy: properties/managedBy.md
 site_url: https://isotc204.org/ontology-its-core
 copyright: <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/">
   <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank"
