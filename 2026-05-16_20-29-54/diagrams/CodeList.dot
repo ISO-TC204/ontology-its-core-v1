@@ -1,0 +1,25 @@
+// Diagram for CodeList
+digraph {
+	graph [overlap=false rankdir=TB splines=true]
+	node [fontname=Arial fontsize=12 margin=0 shape=none]
+	edge [fontname=Arial fontsize=11]
+	{
+		rank=source
+		ITSThing [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">ITSThing</TD></TR></TABLE>> URL="../ITSThing" margin=0]
+	}
+	CodeList [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">CodeList</TD></TR><TR><TD ALIGN="LEFT">hasName : rdf:langString [1]</TD></TR><TR><TD ALIGN="LEFT">hasVersion : xsd:string [0..1]</TD></TR><TR><TD ALIGN="LEFT">lastModified : xsd:date [0..1]</TD></TR></TABLE>> URL="../CodeList" margin=0]
+	{
+		rank=max
+	}
+	subgraph cluster_associated {
+		label="" style=invis
+		Invis [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD></TD></TR></TABLE>> margin=0 style=invis]
+		cdm21_Organization [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">cdm21:Organization</TD></TR></TABLE>> URL="https://w3id.org/citydata/imported/cdm21/latest/Organization" margin=0]
+	}
+	CodeList -> ITSThing [arrowhead=onormal style=solid]
+	CodeList -> Invis [style=invis]
+	Invis -> cdm21_Organization [style=invis]
+	cdm21_Organization [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">cdm21:Organization</TD></TR></TABLE>> URL="https://w3id.org/citydata/imported/cdm21/latest/Organization" margin=0]
+	CodeList -> cdm21_Organization [label="managedBy
+1" arrowhead=normal style=solid]
+}

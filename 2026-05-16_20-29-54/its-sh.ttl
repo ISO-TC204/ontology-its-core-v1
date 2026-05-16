@@ -1,0 +1,144 @@
+PREFIX dcterms:     <http://purl.org/dc/terms/>
+PREFIX owl:         <http://www.w3.org/2002/07/owl#>
+PREFIX rdf:         <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX sh:          <http://www.w3.org/ns/shacl#>
+PREFIX skos:        <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd:         <http://www.w3.org/2001/XMLSchema#>
+PREFIX its-core:    <https://w3id.org/itsdata/core/v1/>
+PREFIX its-sh:      <https://w3id.org/itsdata/shacl/v1/>
+PREFIX i72:         <https://w3id.org/itsdata/i72/v1/>
+PREFIX cdm2:        <https://w3id.org/cdm2/v1/>
+
+# =============================================
+# Reusable SHACL Shapes Library (Core)
+# =============================================
+
+its-sh: a owl:Ontology ;
+    # Ontology metadata
+    dcterms:title                  "ITS Core Ontology"@en;
+    skos:definition                "This ontology defines core concepts related to intelligent transport systems (ITS)."@en;
+    dcterms:license                "http://creativecommons.org/licenses/by/4.0/";
+    its-core:draft                 "true";
+    
+    #Provenance metadata
+    dcterms:creator                "Kenneth Vaughn";
+    dcterms:created                "Draft";
+    dcterms:modified               "2026-04-07"^^xsd:date;
+    owl:versionInfo                "0.0.3";
+    owl:versionIRI                 its-core:r0.3;
+    owl:priorVersion               its-core:r0.2 .
+    
+its-sh:ExactlyOneShape a sh:NodeShape ;
+    sh:name "exactly 1" ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "Exactly one value is required." .
+
+its-sh:MaxOneShape a sh:NodeShape ;
+    sh:name "max 1" ;
+    sh:maxCount 1 ;
+    sh:message "At most one value is allowed." .
+
+its-sh:MinOneShape a sh:NodeShape ;
+    sh:name "min 1" ;
+    sh:minCount 1 ;
+    sh:message "At least one value is required." .
+
+its-sh:UnlimitedShape a sh:NodeShape ;
+    sh:name "0..*" ;
+    # default 0..* – no minCount / maxCount
+    sh:message "Property is optional and may have any number of values." .
+
+its-sh:ExactlyOneMultilingualShape a sh:NodeShape ;
+    sh:name "exactly 1 multilingual" ;
+    sh:nodeKind sh:Literal ;
+    sh:datatype rdf:langString ;
+    sh:uniqueLang true ;
+    sh:minCount 1 ;
+    sh:message "At least one language string is required and only one per language is allowed." .
+
+its-sh:MaxOneMultilingualShape a sh:NodeShape ;
+    sh:name "max 1 multilingual" ;
+    sh:nodeKind sh:Literal ;
+    sh:datatype rdf:langString ;
+    sh:uniqueLang true ;
+    sh:message "Only one language string per language is allowed for this property." .
+
+its-sh:MinOneMultilingualShape a sh:NodeShape ;
+    sh:name "min 1 multilingual" ;
+    sh:nodeKind sh:Literal ;
+    sh:datatype rdf:langString ;
+    sh:minCount 1 ;
+    sh:message "At least one language string is required." .
+
+its-sh:OidShape a sh:NodeShape ;
+    sh:name "OID" ;
+    sh:datatype xsd:string ;    # enforces literal type
+    sh:pattern "^(0|1)(\\.(([1-3]{0,1})[0-9]))(\\.(0|[1-9][0-9]*))*|2(\\.(0|[1-9][0-9]*))+$" ;
+     # Pattern explanation:
+     # - At least two arcs total (e.g., "1.3")
+     # - First arc: 0, 1, or 2
+     # - If first arc is 0 or 1: second arc 0-39; if first arc is 2: second arc ≥0
+     # - Subsequent arcs: non-negative integers with no leading zeros (except single '0')
+     # - Allows for large integers in arcs (e.g., "2.999.1234567890")
+    sh:message "Value must be a valid ASN.1 OID per ITU-T X.680 / ISO/IEC 8824-1." .
+
+its-sh:CodeShape
+    a sh:NodeShape ;
+    sh:targetClass its-core:Code ;
+    sh:property [
+        sh:path its-core:codeValue ;
+        sh:node its-sh:ExactlyOneShape ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path its-core:fromCodeList ;
+        sh:node its-sh:ExactlyOneShape ;
+        sh:class its-core:CodeList ;
+    ] .
+
+its-sh:CodeListShape
+    a sh:NodeShape ;
+    sh:targetClass its-core:CodeList ;
+    sh:property [
+        sh:path its-core:managedBy ;
+        sh:node its-sh:ExactlyOneShape ;
+        sh:class cdm2:Organization ;
+    ] ;
+    sh:property [
+        sh:path its-core:hasName ;
+        sh:node its-sh:ExactlyOneShape ;
+        sh:datatype rdf:langString ;
+    ] ;
+    sh:property [
+        sh:path its-core:hasVersion ;
+        sh:node its-sh:MaxOneShape ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path its-core:lastModified ;
+        sh:node its-sh:MaxOneShape ;
+        sh:datatype xsd:date ;
+    ] .
+
+its-sh:AngleShape a sh:NodeShape ;
+    sh:targetClass its-core:Angle ;
+    sh:property [
+        sh:path i72:hasValue ;
+        sh:node its-sh:ExactlyOneShape ;
+        sh:datatype xsd:decimal ;
+    ] ;
+     sh:property [
+        sh:path i72:hasUnit ;
+        sh:node its-sh:ExactlyOneShape ;
+        sh:class its-core:AngleUnit ;
+    ] .
+
+its-sh:AngleUnitShape a sh:NodeShape ;
+    sh:targetClass its-core:AngleUnit ;
+    sh:property [
+        sh:path i72:hasUnit ;
+        sh:node its-sh:ExactlyOneShape ;
+        sh:class its-core:AngleUnit ;
+    ] .
+
