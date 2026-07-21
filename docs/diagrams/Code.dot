@@ -22,6 +22,5 @@ digraph {
 	Code -> Invis [style=invis]
 	Invis -> CodeList [style=invis]
 	CodeList [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">CodeList</TD></TR></TABLE>> URL="../CodeList" margin=0]
-	Code -> CodeList [label="fromCodeList
-1" arrowhead=normal style=solid]
+	Code -> CodeList [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white"><TR><TD ALIGN="CENTER">fromCodeList</TD></TR><TR><TD ALIGN="CENTER">1</TD></TR></TABLE>> arrowhead=normal style=solid]
 }
