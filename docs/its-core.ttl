@@ -7,6 +7,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX vann: <http://purl.org/vocab/vann/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX cdm1: <https://w3id.org/citydata/part1/v1/>
 PREFIX cdm2: <https://w3id.org/citydata/part2/v1/>
 PREFIX i72: <https://w3id.org/itsdata/i72/v1/>
 PREFIX its-core: <https://w3id.org/itsdata/core/v1/>
@@ -14,7 +15,7 @@ its-core: a owl:Ontology;
     # Ontology metadata
     dcterms:title                  "ITS Core Ontology"@en;
     skos:definition                "This ontology defines core concepts related to intelligent transport systems (ITS)."@en;
-    vann:preferredNamespaceUri     "https://w3id.org/itsdata/core/";
+    vann:preferredNamespaceUri     "https://w3id.org/itsdata/core/v1/";
     vann:preferredNamespacePrefix  "its-core";
     dcterms:license                "http://creativecommons.org/licenses/by/4.0/";
     its-core:draft                 "true";
@@ -125,13 +126,6 @@ its-core:hasName
     rdfs:range rdf:langString ;
     skos:definition "A human-readable name for the code list."@en .
 
-its-core:hasVersion
-    a owl:DatatypeProperty ;
-    rdfs:subPropertyOf  its-core:ITSDataProperty;
-    rdfs:domain its-core:CodeList ;
-    rdfs:range xsd:string ;
-    skos:definition "Version identifier for the code list."@en .
-
 its-core:lastModified
     a owl:DatatypeProperty ;
     rdfs:subPropertyOf  its-core:ITSDataProperty;
@@ -184,6 +178,13 @@ its-core:AngleUnit
     rdfs:subClassOf i72:Unit_of_measure ;
     skos:definition "A specified system of units for angles."@en .
 
+its-core:ComparisonOperatorCode
+    rdf:type        owl:Class ;
+    rdfs:subClassOf its-core:ITSThing ;
+    rdfs:subClassOf its-core:Code ;
+    skos:definition "A code representing a comparison operator."@en ;
+    skos:example     "equals, not equals, greater than, less than, greater than or equal to, less than or equal to"@en .
+
 its-core:Direction
     rdf:type        owl:Class ;
     rdfs:subClassOf its-core:ITSThing ;
@@ -202,4 +203,16 @@ its-core:DirectionCode
     rdfs:subClassOf its-core:Code ;
     skos:definition "A code representing orientation of a line or movement."@en ;
     skos:example     "north, inbound, positive, clockwise"@en .
+
+its-core:VersionedThing
+    rdf:type        owl:Class ;
+    rdfs:subClassOf its-core:ITSThing ;
+    rdfs:subClassOf cdm1:Manifestation ;
+    rdfs:subClassOf [
+        rdf:type                    owl:Restriction ;
+        owl:onProperty              cdm1:hasVersion ;
+        owl:datatype                xsd:string ;
+        owl:qualifiedCardinality    "1"^^xsd:nonNegativeInteger
+    ] ;
+    skos:definition "An identifiable version of a managed object."@en .
 
