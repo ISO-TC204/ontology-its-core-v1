@@ -14,10 +14,10 @@ PREFIX cdm2:        <https://w3id.org/cdm2/v1/>
 # Reusable SHACL Shapes Library (Core)
 # =============================================
 
-:SHACL a owl:Ontology ;
+:CoreSHACL a owl:Ontology ;
     # Ontology metadata
-    dcterms:title                  "ITS Core Ontology"@en;
-    skos:definition                "This ontology defines core concepts related to intelligent transport systems (ITS)."@en;
+    dcterms:title                  "ITS Core SHACL Library"@en;
+    skos:definition                "Reusable SHACL shapes shared across ITS ontology topic areas."@en;
     dcterms:license                "http://creativecommons.org/licenses/by/4.0/";
     its-core:draft                 "true";
     
@@ -27,7 +27,7 @@ PREFIX cdm2:        <https://w3id.org/cdm2/v1/>
     dcterms:modified               "2026-04-07"^^xsd:date;
     owl:versionInfo                "0.0.4";
     owl:versionIRI                 its-core:r0.3.1;
-    skos:changeNote                "Changed IRIs to use its-core rather than its-sh to enable redirects on w3id.org."@en;
+    skos:changeNote                "Renamed ontology to CoreSHACL and file to core-shacl.ttl so w3id CamelCase→kebab rules apply without exceptions."@en;
     owl:priorVersion               its-core:r0.3 .
     
 :ExactlyOneShape a sh:NodeShape ;
