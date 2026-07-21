@@ -4,6 +4,6 @@
 
 The jurisdiction associated with the object.
 
-**Range**: [cdm2:JurisdictionalArea](https://w3id.org/citydata/part2/v1/JurisdictionalArea)
+**Range**: [cdm2:JurisdictionalArea](../classes/cdm2:JurisdictionalArea.md)
 
 **IRI**: `https://w3id.org/itsdata/core/v1/hasJurisdiction`

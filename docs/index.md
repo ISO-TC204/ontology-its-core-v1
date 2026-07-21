@@ -19,8 +19,10 @@ This ontology imports the following files:
 - [Bearing](classes/Bearing.md)
 - [Code](classes/Code.md)
 - [Code List](classes/CodeList.md)
+- [Comparison Operator Code](classes/ComparisonOperatorCode.md)
 - [Direction](classes/Direction.md)
 - [Direction Code](classes/DirectionCode.md)
+- [Versioned Thing](classes/VersionedThing.md)
 
 ### Properties
 
@@ -31,7 +33,6 @@ This ontology imports the following files:
 - [hasMaintainer](properties/hasMaintainer.md)
 - [hasName](properties/hasName.md)
 - [hasRegisteredCode](properties/hasRegisteredCode.md)
-- [hasVersion](properties/hasVersion.md)
 - [ITSObjectProperty](properties/ITSObjectProperty.md)
 - [lastModified](properties/lastModified.md)
 - [managedBy](properties/managedBy.md)
