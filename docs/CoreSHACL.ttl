@@ -30,7 +30,8 @@ PREFIX vann:        <http://purl.org/vocab/vann/>
     dcterms:modified               "2026-07-27"^^xsd:date ;
     owl:versionInfo                "0.0.3-alpha.3" ;
     owl:versionIRI                 <https://w3id.org/itsdata/core/v1/0.0.3-alpha.3> ;
-    
+    owl:priorVersion               <https://w3id.org/itsdata/core/v1/0.0.3-alpha.2> .
+
 # ================================================
 #                 Reusable Shapes
 # ================================================
