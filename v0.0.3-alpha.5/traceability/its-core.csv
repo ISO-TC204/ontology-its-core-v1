@@ -1,0 +1,30 @@
+id,qname,heading,text,type,diagram,website,updated
+,OfficialThing,OfficialThing,An item that is officially issued by an Agent.,Class,https://w3id.org/itsdata/core/v1/diagrams/OfficialThing.dot.svg,https://w3id.org/itsdata/core/v1/OfficialThing,2026-07-27T10:14:53.504900
+,Direction,Direction,The orientation of a line or movement.,Class,https://w3id.org/itsdata/core/v1/diagrams/Direction.dot.svg,https://w3id.org/itsdata/core/v1/Direction,2026-07-27T10:14:53.504900
+,VersionedThing,VersionedThing,An identifiable version of a managed object.,Class,https://w3id.org/itsdata/core/v1/diagrams/VersionedThing.dot.svg,https://w3id.org/itsdata/core/v1/VersionedThing,2026-07-27T10:14:53.504900
+,ComparisonOperatorCode,ComparisonOperatorCode,A code representing a comparison operator.,Class,https://w3id.org/itsdata/core/v1/diagrams/ComparisonOperatorCode.dot.svg,https://w3id.org/itsdata/core/v1/ComparisonOperatorCode,2026-07-27T10:14:53.504900
+,Code,Code,A code value whose meaning is defined by membership in (or reference to) a code list.,Class,https://w3id.org/itsdata/core/v1/diagrams/Code.dot.svg,https://w3id.org/itsdata/core/v1/Code,2026-07-27T10:14:53.504900
+,CodeList,CodeList,"A curated set of codes (a code list), maintained and versioned by some entity.",Class,https://w3id.org/itsdata/core/v1/diagrams/CodeList.dot.svg,https://w3id.org/itsdata/core/v1/CodeList,2026-07-27T10:14:53.504900
+,AngleUnit,AngleUnit,A specified system of units for angles.,Class,https://w3id.org/itsdata/core/v1/diagrams/AngleUnit.dot.svg,https://w3id.org/itsdata/core/v1/AngleUnit,2026-07-27T10:14:53.504900
+,Angle,Angle,An angle defined by two lines.,Class,https://w3id.org/itsdata/core/v1/diagrams/Angle.dot.svg,https://w3id.org/itsdata/core/v1/Angle,2026-07-27T10:14:53.504900
+,Bearing,Bearing,"The orientation of a line or movement, measured from north (0°) clockwise.",Class,https://w3id.org/itsdata/core/v1/diagrams/Bearing.dot.svg,https://w3id.org/itsdata/core/v1/Bearing,2026-07-27T10:14:53.504900
+,ActivationStatusCode,ActivationStatusCode,A code indicating the activation status of an object,Class,https://w3id.org/itsdata/core/v1/diagrams/ActivationStatusCode.dot.svg,https://w3id.org/itsdata/core/v1/ActivationStatusCode,2026-07-27T10:14:53.504900
+,DirectionCode,DirectionCode,A code representing orientation of a line or movement.,Class,https://w3id.org/itsdata/core/v1/diagrams/DirectionCode.dot.svg,https://w3id.org/itsdata/core/v1/DirectionCode,2026-07-27T10:14:53.504900
+,ITSObjectProperty,ITSObjectProperty,An object property to organize all object properties defined in all recognized ITS Ontologies.,ObjectProperty,,https://w3id.org/itsdata/core/v1/ITSObjectProperty,2026-07-27T10:14:53.504900
+,enteredBy,enteredBy,The Agent that entered the OfficialThing.,ObjectProperty,,https://w3id.org/itsdata/core/v1/enteredBy,2026-07-27T10:14:53.504900
+,fromCodeList,fromCodeList,Associates a code with the code list that defines it.,ObjectProperty,,https://w3id.org/itsdata/core/v1/fromCodeList,2026-07-27T10:14:53.504900
+,hasActivationStatus,hasActivationStatus,The activation status of the object.,ObjectProperty,,https://w3id.org/itsdata/core/v1/hasActivationStatus,2026-07-27T10:14:53.504900
+,hasJurisdiction,hasJurisdiction,The jurisdiction associated with the object.,ObjectProperty,,https://w3id.org/itsdata/core/v1/hasJurisdiction,2026-07-27T10:14:53.504900
+,hasRegisteredCode,hasRegisteredCode,Associates a code list with a registered member code.,ObjectProperty,,https://w3id.org/itsdata/core/v1/hasRegisteredCode,2026-07-27T10:14:53.504900
+,issuingAuthority,issuingAuthority,The Agent that issued the OfficialThing.,ObjectProperty,,https://w3id.org/itsdata/core/v1/issuingAuthority,2026-07-27T10:14:53.504900
+,managedBy,managedBy,Associates a code list with a registered member code.,ObjectProperty,,https://w3id.org/itsdata/core/v1/managedBy,2026-07-27T10:14:53.504900
+,ITSDataProperty,ITSDataProperty,A datatype property to organize all datatype properties defined in all recognized ITS Ontologies.,DatatypeProperty,,https://w3id.org/itsdata/core/v1/ITSDataProperty,2026-07-27T10:14:53.504900
+,codeValue,codeValue,The lexical value of a code.,DatatypeProperty,,https://w3id.org/itsdata/core/v1/codeValue,2026-07-27T10:14:53.504900
+,enteredOn,enteredOn,The date the OfficialThing was entered.,DatatypeProperty,,https://w3id.org/itsdata/core/v1/enteredOn,2026-07-27T10:14:53.504900
+,hasImage,hasImage,The binary content of an image embedded as base64-encoded bytes.,DatatypeProperty,,https://w3id.org/itsdata/core/v1/hasImage,2026-07-27T10:14:53.504900
+,hasMaintainer,hasMaintainer,The maintainer of the code list (free-text identifier; can be replaced with a richer organization model later).,DatatypeProperty,,https://w3id.org/itsdata/core/v1/hasMaintainer,2026-07-27T10:14:53.504900
+,hasName,hasName,A human-readable name for the code list.,DatatypeProperty,,https://w3id.org/itsdata/core/v1/hasName,2026-07-27T10:14:53.504900
+,hasUrl,hasUrl,The URL associated with the object.,DatatypeProperty,,https://w3id.org/itsdata/core/v1/hasUrl,2026-07-27T10:14:53.504900
+,hasVersion,hasVersion,The version of the object.,DatatypeProperty,,https://w3id.org/itsdata/core/v1/hasVersion,2026-07-27T10:14:53.504900
+,issuedOn,issuedOn,The date the OfficialThing was issued.,DatatypeProperty,,https://w3id.org/itsdata/core/v1/issuedOn,2026-07-27T10:14:53.504900
+,lastModified,lastModified,Date the code list was last modified.,DatatypeProperty,,https://w3id.org/itsdata/core/v1/lastModified,2026-07-27T10:14:53.504900
