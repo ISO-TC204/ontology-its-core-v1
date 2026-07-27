@@ -26,21 +26,15 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Collect existing tags
-        id: tags
-        run: |
-          git fetch --tags --force
-          {
-            echo "list<<EOF"
-            git tag -l
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
       - name: Apply VERSION (stamp TTL / append RELEASES)
         id: apply
         run: |
+          set -euo pipefail
+          git fetch --tags --force
           TAGS=$(git tag -l | paste -sd, -)
-          python3 scripts/versioning.py apply --existing-tags "$TAGS"
+          python3 scripts/versioning.py apply --existing-tags "$TAGS" | tee /tmp/version-apply.out
+          # Mirror outputs in the shell so step outputs are reliable
+          grep -E '^(kind|version|tag|prerelease|changed|publish)=' /tmp/version-apply.out >> "$GITHUB_OUTPUT"
 
       - name: Commit stamped metadata
         id: commit
@@ -59,17 +53,24 @@ jobs:
           fi
 
       - name: Create GitHub Release
-        if: steps.apply.outputs.changed == 'true' && steps.apply.outputs.tag != ''
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.apply.outputs.tag }}
-          name: ${{ steps.apply.outputs.tag }}
-          target_commitish: ${{ steps.commit.outputs.sha || github.sha }}
-          prerelease: ${{ steps.apply.outputs.prerelease == 'true' }}
-          generate_release_notes: true
-          body: |
-            Automated release from `VERSION`.
-
-            - kind: `${{ steps.apply.outputs.kind }}`
-            - version: `${{ steps.apply.outputs.version }}`
-            - tag: `${{ steps.apply.outputs.tag }}`
+        if: steps.apply.outputs.publish == 'true' && steps.apply.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.apply.outputs.tag }}
+          KIND: ${{ steps.apply.outputs.kind }}
+          VERSION: ${{ steps.apply.outputs.version }}
+          PRERELEASE: ${{ steps.apply.outputs.prerelease }}
+          TARGET: ${{ steps.commit.outputs.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "GitHub Release $TAG already exists"
+            exit 0
+          fi
+          ARGS=( "$TAG" --title "$TAG" --target "$TARGET" --generate-notes )
+          if [ "$PRERELEASE" = "true" ]; then
+            ARGS+=( --prerelease )
+          fi
+          ARGS+=( --notes "Automated release from VERSION (${KIND} ${VERSION})." )
+          gh release create "${ARGS[@]}"
+          echo "Created GitHub Release $TAG"

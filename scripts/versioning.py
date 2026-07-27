@@ -212,7 +212,7 @@ def latest_semver(records: Iterable[ReleaseRecord]) -> Optional[str]:
 
 
 def latest_full_ontology_version(records: Iterable[ReleaseRecord]) -> Optional[str]:
-    """Latest ontology release with no pre-release label (for owl:priorVersion)."""
+    """Latest ontology release with no pre-release label."""
     best: Optional[SemVer] = None
     best_text: Optional[str] = None
     for rec in records:
@@ -225,6 +225,28 @@ def latest_full_ontology_version(records: Iterable[ReleaseRecord]) -> Optional[s
             best = ver
             best_text = normalize_semver(rec.version)
     return best_text
+
+
+def latest_ontology_version(records: Iterable[ReleaseRecord]) -> Optional[str]:
+    """Latest ontology SemVer in RELEASES (includes pre-releases)."""
+    best: Optional[SemVer] = None
+    best_text: Optional[str] = None
+    for rec in records:
+        if rec.kind != "ontology":
+            continue
+        ver = SemVer.parse(rec.version)
+        if best is None or ver > best:
+            best = ver
+            best_text = normalize_semver(rec.version)
+    return best_text
+
+
+def prior_version_for(records: list[ReleaseRecord]) -> Optional[str]:
+    """Prefer last full ontology release; else last ontology release (pre-release OK)."""
+    full = latest_full_ontology_version(records)
+    if full:
+        return full
+    return latest_ontology_version(records)
 
 
 def max_release_date(records: Iterable[ReleaseRecord]) -> Optional[dt.date]:
@@ -333,7 +355,16 @@ def stamp_ttl(
     if vf.is_doc_only:
         return []
     today = today or dt.date.today()
-    prior = latest_full_ontology_version(records)
+    # Exclude the version we are stamping if it somehow already appears
+    prior_records = [
+        r
+        for r in records
+        if not (
+            r.kind == "ontology"
+            and normalize_semver(r.version) == normalize_semver(vf.version)
+        )
+    ]
+    prior = prior_version_for(prior_records)
     modified = today.isoformat()
     changed: list[Path] = []
     for path in TTL_FILES:
@@ -419,15 +450,35 @@ def cmd_validate(_args: argparse.Namespace) -> int:
     return 0
 
 
+def _tag_for(vf: VersionFile, existing_tags: Iterable[str]) -> str:
+    if vf.is_doc_only:
+        assert vf.doc_only is not None
+        return choose_doc_tag(vf.doc_only, existing_tags)
+    return ontology_tag(vf.version)
+
+
 def cmd_apply(args: argparse.Namespace) -> int:
-    """Stamp TTL (ontology only), append RELEASES if not already recorded."""
+    """Stamp TTL (ontology only), append RELEASES if not already recorded.
+
+    Always emits the git tag for the current VERSION so the workflow can create
+    a GitHub Release even when metadata was already written (retry / race).
+    """
     try:
         vf = parse_version_file()
         records = parse_releases()
+        existing = [
+            t.strip() for t in (args.existing_tags or "").split(",") if t.strip()
+        ]
+        tag = _tag_for(vf, existing)
+        prerelease = (not vf.is_doc_only) and vf.is_prerelease
 
         if already_recorded(vf, records):
-            print("Release already recorded in RELEASES; nothing to do.")
-            _emit_outputs(vf, tag="", prerelease=False, changed=False)
+            print(
+                "RELEASES already has this version; ensuring GitHub Release can be published."
+            )
+            _emit_outputs(
+                vf, tag=tag, prerelease=prerelease, changed=False, publish=True
+            )
             return 0
 
         # Only enforce bump/date rules when this VERSION is not yet recorded
@@ -439,18 +490,7 @@ def cmd_apply(args: argparse.Namespace) -> int:
         release_date = vf.doc_only if vf.is_doc_only else dt.date.today()
         append_release(vf, release_date=release_date)
 
-        if vf.is_doc_only:
-            assert vf.doc_only is not None
-            existing = [
-                t.strip() for t in (args.existing_tags or "").split(",") if t.strip()
-            ]
-            tag = choose_doc_tag(vf.doc_only, existing)
-            prerelease = False
-        else:
-            tag = ontology_tag(vf.version)
-            prerelease = vf.is_prerelease
-
-        _emit_outputs(vf, tag=tag, prerelease=prerelease, changed=True)
+        _emit_outputs(vf, tag=tag, prerelease=prerelease, changed=True, publish=True)
         return 0
     except Exception as e:
         print(f"ERROR: {e}", file=sys.stderr)
@@ -458,7 +498,12 @@ def cmd_apply(args: argparse.Namespace) -> int:
 
 
 def _emit_outputs(
-    vf: VersionFile, *, tag: str, prerelease: bool, changed: bool
+    vf: VersionFile,
+    *,
+    tag: str,
+    prerelease: bool,
+    changed: bool,
+    publish: bool = True,
 ) -> None:
     lines = [
         f"kind={vf.release_type}",
@@ -466,6 +511,7 @@ def _emit_outputs(
         f"tag={tag}",
         f"prerelease={'true' if prerelease else 'false'}",
         f"changed={'true' if changed else 'false'}",
+        f"publish={'true' if publish else 'false'}",
     ]
     for line in lines:
         print(line)
