@@ -25,10 +25,9 @@ PREFIX schema: <https://schema.org/>
     #Provenance metadata
     dcterms:creator                "Kenneth Vaughn";
     dcterms:created                "Draft";
-    dcterms:modified               "2026-04-07"^^xsd:date;
-    owl:versionInfo                "0.0.3";
-    owl:versionIRI                 :r0.3;
-    owl:priorVersion               :r0.2;
+    dcterms:modified               "2026-07-27"^^xsd:date ;
+    owl:versionInfo                "0.0.3-alpha.3" ;
+    owl:versionIRI                 <https://w3id.org/itsdata/core/v1/0.0.3-alpha.3> ;
     
     # Imports
     owl:imports                    cdm2:CityPattern .
