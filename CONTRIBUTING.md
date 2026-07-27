@@ -12,35 +12,50 @@ By providing a contribution to this project, contributors agree to submit their 
 
 ## Pull requests and VERSION
 
-All changes go through pull requests (typically from a fork). Every PR must update the root [`VERSION`](VERSION) file so the required `validate-version` check can pass.
+All changes go through pull requests from a **fork**. Every PR must set the root [`VERSION`](VERSION) file.
 
-### Ontology change
+The `validate-version` check compares your PR's `VERSION` to **`RELEASES` on the upstream base branch** (not whatever happens to be on your fork). You do **not** need a perfect local sync of `RELEASES` for the check to make sense.
 
-Bump the SemVer (must be **greater than** the latest SemVer in [`RELEASES`](RELEASES)):
+### Set VERSION
 
-```text
-version: 1.2.3
+```bash
+# see what upstream already released, then set VERSION to the suggestion
+python3 scripts/versioning.py suggest --releases RELEASES
 ```
 
-Pre-releases are allowed:
+Ontology change (must be greater than the latest SemVer on upstream `RELEASES`):
 
 ```text
 version: 1.2.3-alpha.1
 ```
 
-After merge, CI stamps `owl:versionInfo` / `owl:versionIRI` / `owl:priorVersion` / `dcterms:modified` in the TTL files, appends `RELEASES`, and creates a GitHub Release tagged `v1.2.3` (marked as a pre-release when a pre-release label is present).
-
-### Documentation-only change
-
-Keep the SemVer unchanged and add a `doc-only` date that is **≥** the latest date in `RELEASES`:
+Documentation-only (SemVer unchanged; add a date):
 
 ```text
 version: 1.2.3
 doc-only: 2026-07-27
 ```
 
-After merge, CI appends a `doc-only` row to `RELEASES` and creates a GitHub Release tagged `docs-2026-07-27` (or `docs-YYYY-MM-DDTHHMMSSZ` if that date tag already exists). TTL ontology identity is not changed.
+### Keep your fork clean
+
+Release automation runs **only on the canonical repo** (`ISO-TC204/ontology-its-core-v1`), not on forks. Still, prefer:
+
+1. Branch from latest upstream `main`
+2. Make your edits + one `VERSION` bump
+3. Open the PR (GitHub **Squash and merge** is recommended so one commit lands upstream)
+
+If your fork `main` has drifted (extra `chore(release):` bot commits, VERSION ahead of upstream):
+
+```bash
+git fetch https://github.com/ISO-TC204/ontology-its-core-v1.git main:upstream-main
+git checkout main
+git reset --hard upstream-main
+git push --force-with-lease origin main
+```
+
+Then create a fresh feature branch for new work.
 
 ### Maintainer setup
 
-In the origin repository, protect `main` and require the status check named **`validate-version`**.
+1. Protect `main` and require status check **`validate-version`**.
+2. Prefer **Squash and merge** only for PRs into `main`.

@@ -1,7 +1,10 @@
 name: Apply VERSION and publish release
 
 # After merge to main: stamp TTL (ontology releases), append RELEASES,
-# commit if needed, and create a GitHub Release/tag for mike/web deploy.
+# commit if needed, create a GitHub Release/tag, then deploy the site.
+#
+# NOTE: Releases created with GITHUB_TOKEN do not trigger other workflows'
+# `on: release` handlers. Deploy is therefore invoked via workflow_call.
 
 on:
   push:
@@ -10,11 +13,21 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   release:
     name: apply-and-release
+    # Never run release automation on forks — that pollutes fork main with
+    # bot VERSION/RELEASES commits (alpha.5/alpha.6, etc.) ahead of upstream.
+    if: github.repository == 'ISO-TC204/ontology-its-core-v1'
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.apply.outputs.tag }}
+      publish: ${{ steps.apply.outputs.publish }}
+      kind: ${{ steps.apply.outputs.kind }}
+      version: ${{ steps.apply.outputs.version }}
+      prerelease: ${{ steps.apply.outputs.prerelease }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -74,3 +87,12 @@ jobs:
           ARGS+=( --notes "Automated release from VERSION (${KIND} ${VERSION})." )
           gh release create "${ARGS[@]}"
           echo "Created GitHub Release $TAG"
+
+  deploy:
+    name: deploy-site
+    needs: release
+    if: needs.release.outputs.publish == 'true' && needs.release.outputs.tag != ''
+    uses: ./.github/workflows/update_release.yml
+    with:
+      release_tag: ${{ needs.release.outputs.tag }}
+    secrets: inherit
