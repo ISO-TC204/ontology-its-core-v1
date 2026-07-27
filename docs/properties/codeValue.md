@@ -4,10 +4,6 @@
 
 The lexical value of a code.
 
-**Domain**: [Code](../classes/Code.md)
-
-**Range**: [xsd:string](https://w3id.org/citydata/imported/xsd/string)
-
 ## Used in classes
 
 | Class |

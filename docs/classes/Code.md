@@ -109,5 +109,5 @@ A code value whose meaning is defined by membership in (or reference to) a code 
 | [codeValue](../properties/codeValue.md) | exactly 1 xsd:string |
 | [fromCodeList](../properties/fromCodeList.md) | exactly 1 [CodeList](https://w3id.org/itsdata/core/v1/CodeList) |
 | subClassOf | [ITSThing](ITSThing.md) |
-| subClassOf | [cdm2:Code](cdm2:Code.md) |
+| subClassOf | [cdm2:Code](https://w3id.org/citydata/part2/v1/Code) |
 

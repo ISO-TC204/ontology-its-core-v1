@@ -1,5 +1,6 @@
 BASE   <https://w3id.org/itsdata/core/v1/>
 PREFIX : <https://w3id.org/itsdata/core/v1/>
+PREFIX dash: <http://datashapes.org/dash#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -9,24 +10,25 @@ PREFIX vann: <http://purl.org/vocab/vann/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX cdm1: <https://w3id.org/citydata/part1/v1/>
 PREFIX cdm2: <https://w3id.org/citydata/part2/v1/>
-PREFIX i72: <https://w3id.org/itsdata/i72/v1/>
-PREFIX its-core: <https://w3id.org/itsdata/core/v1/>
-its-core: a owl:Ontology;
+PREFIX i72: <https://w3id.org/citydata/21972/v1/>
+PREFIX schema: <https://schema.org/>
+
+: a owl:Ontology;
     # Ontology metadata
     dcterms:title                  "ITS Core Ontology"@en;
     skos:definition                "This ontology defines core concepts related to intelligent transport systems (ITS)."@en;
     vann:preferredNamespaceUri     "https://w3id.org/itsdata/core/v1/";
     vann:preferredNamespacePrefix  "its-core";
     dcterms:license                "http://creativecommons.org/licenses/by/4.0/";
-    its-core:draft                 "true";
+    :draft                 "true";
     
     #Provenance metadata
     dcterms:creator                "Kenneth Vaughn";
     dcterms:created                "Draft";
     dcterms:modified               "2026-04-07"^^xsd:date;
     owl:versionInfo                "0.0.3";
-    owl:versionIRI                 its-core:r0.3;
-    owl:priorVersion               its-core:r0.2;
+    owl:versionIRI                 :r0.3;
+    owl:priorVersion               :r0.2;
     
     # Imports
     owl:imports                    cdm2:CityPattern .
@@ -48,115 +50,145 @@ its-core: a owl:Ontology;
     #                                 Time (W3C)
 
 
-its-core:reqviewId a owl:AnnotationProperty;
-    rdfs:label "reqviewId" ;
-    rdfs:comment "An annotation property to link a requirement to its corresponding ReqView ID." .
+# ================================================
+#                Annotation Properties
+# ================================================
 
-# Object properties
-its-core:ITSObjectProperty a owl:ObjectProperty;
+:reqviewId a owl:AnnotationProperty;
+    rdfs:label "reqviewId" ;
+    rdfs:comment "An annotation property to link a requirement to its corresponding ReqView ID to enable traceability in requirements management." .
+
+# ================================================
+#                Object Properties
+# ================================================
+
+:ITSObjectProperty a owl:ObjectProperty;
     skos:definition  "An object property to organize all object properties defined in all recognized ITS Ontologies." .
 
-its-core:fromCodeList
+:enteredBy
     a owl:ObjectProperty ;
-    rdfs:subPropertyOf  its-core:ITSObjectProperty;
-    rdfs:domain its-core:Code ;
-    rdfs:range its-core:CodeList ;
+    rdfs:subPropertyOf  :ITSObjectProperty;
+    schema:domainIncludes :OfficialThing ;
+    schema:rangeIncludes cdm1:Agent ;
+    skos:definition "The Agent that entered the OfficialThing."@en ;
+    skos:example "The City of Los Angeles"@en .
+
+:fromCodeList
+    a owl:ObjectProperty ;
+    rdfs:subPropertyOf  :ITSObjectProperty;
+    schema:domainIncludes :Code ;
+    schema:rangeIncludes :CodeList ;
     skos:definition "Associates a code with the code list that defines it."@en .
 
-its-core:hasActivationStatus a owl:ObjectProperty;
+:hasActivationStatus a owl:ObjectProperty;
     skos:definition     "The activation status of the object.";
-    rdfs:subPropertyOf  its-core:ITSObjectProperty;
-    rdfs:range          its-core:ActivationStatusCode .
+    rdfs:subPropertyOf  :ITSObjectProperty;
+    schema:rangeIncludes          :ActivationStatusCode .
 
-its-core:hasJurisdiction a owl:ObjectProperty;
-    rdfs:subPropertyOf  its-core:ITSObjectProperty;
+:hasJurisdiction a owl:ObjectProperty;
+    rdfs:subPropertyOf  :ITSObjectProperty;
     skos:definition     "The jurisdiction associated with the object.";
-    rdfs:range          cdm2:JurisdictionalArea .
+    schema:rangeIncludes          cdm2:JurisdictionalArea .
 
-its-core:hasRegisteredCode
+:hasRegisteredCode
     a owl:ObjectProperty ;
-    rdfs:subPropertyOf  its-core:ITSObjectProperty;
-    rdfs:domain its-core:CodeList ;
-    rdfs:range its-core:Code ;
+    rdfs:subPropertyOf  :ITSObjectProperty;
+    schema:domainIncludes :CodeList ;
+    schema:rangeIncludes :Code ;
     skos:definition "Associates a code list with a registered member code."@en .
 
-its-core:managedBy
+:issuingAuthority
+    rdf:type            owl:ObjectProperty ;
+    rdfs:subPropertyOf  :ITSObjectProperty ;
+    schema:domainIncludes :OfficialThing ;
+    schema:rangeIncludes cdm1:Agent ;
+    skos:definition "The Agent that issued the OfficialThing."@en ;
+    skos:example "The City of Los Angeles"@en ;
+    skos:editorsNote "Changed from a simple string to a pointer to an Agent (i.e., a person, organization, software agent, or group)."@en ;
+    skos:editorsNote "Moved from TRO to the more abstract OfficialThing as it can apply to code lists, definitions of defined areas, etc."@en .
+
+:managedBy
     a owl:ObjectProperty ;
-    rdfs:subPropertyOf  its-core:ITSObjectProperty;
-    rdfs:domain its-core:CodeList ;
-    rdfs:range cdm2:Organization ;
+    rdfs:subPropertyOf  :ITSObjectProperty;
+    schema:domainIncludes :CodeList ;
+    schema:rangeIncludes cdm2:Organization ;
     skos:definition "Associates a code list with a registered member code."@en .
 
-# Datatype properties
-its-core:ITSDataProperty a owl:DataProperty;
+# ================================================
+#                Datatype Properties
+# ================================================
+
+:ITSDataProperty a owl:DatatypeProperty;
     skos:definition  "A datatype property to organize all datatype properties defined in all recognized ITS Ontologies." .
 
-its-core:hasImage a owl:DataProperty;
-    skos:definition     "The binary content of an image embedded as base64-encoded bytes.";
-    rdfs:subPropertyOf  its-core:ITSDataProperty;
-    rdfs:range          xsd:base64Binary .
-
-its-core:hasUrl a owl:DataProperty;
-    skos:definition     "The URL associated with the object.";
-    rdfs:subPropertyOf  its-core:ITSDataProperty;
-    rdfs:range          xsd:anyURI .
-
-its-core:hasVersion a owl:DataProperty;
-    rdfs:subPropertyOf  its-core:ITSDataProperty;
-    skos:definition     "The version of the object." .
-
-its-core:codeValue
-    a owl:DatatypeProperty ;
-    rdfs:subPropertyOf  its-core:ITSDataProperty;
-    rdfs:domain its-core:Code ;
-    rdfs:range xsd:string ;
+:codeValue a owl:DatatypeProperty ;
+    rdfs:subPropertyOf  :ITSDataProperty;
+    schema:domainIncludes :Code ;
+    schema:rangeIncludes xsd:string ;
     skos:definition "The lexical value of a code."@en .
 
-its-core:hasMaintainer
-    a owl:DatatypeProperty ;
-    rdfs:subPropertyOf  its-core:ITSDataProperty;
-    rdfs:domain its-core:CodeList ;
-    rdfs:range xsd:string ;
+:enteredOn a owl:DatatypeProperty ;
+    rdfs:subPropertyOf  :ITSDataProperty;
+    schema:domainIncludes :OfficialThing ;
+    schema:rangeIncludes xsd:dateTime ;
+    skos:definition "The date the OfficialThing was entered."@en ;
+    skos:example "2026-01-01T00:00:00Z"@en .
+
+:hasImage a owl:DatatypeProperty;
+    skos:definition     "The binary content of an image embedded as base64-encoded bytes.";
+    rdfs:subPropertyOf  :ITSDataProperty;
+    schema:rangeIncludes          xsd:base64Binary .
+
+:hasMaintainer a owl:DatatypeProperty ;
+    rdfs:subPropertyOf  :ITSDataProperty;
+    schema:domainIncludes :CodeList ;
+    schema:rangeIncludes xsd:string ;
     skos:definition "The maintainer of the code list (free-text identifier; can be replaced with a richer organization model later)."@en .
 
-its-core:hasName
-    a owl:DatatypeProperty ;
-    rdfs:subPropertyOf  its-core:ITSDataProperty;
-    rdfs:domain its-core:CodeList ;
-    rdfs:range rdf:langString ;
+:hasName a owl:DatatypeProperty ;
+    rdfs:subPropertyOf  :ITSDataProperty;
+    schema:domainIncludes :CodeList ;
+    schema:rangeIncludes rdf:langString ;
     skos:definition "A human-readable name for the code list."@en .
 
-its-core:lastModified
-    a owl:DatatypeProperty ;
-    rdfs:subPropertyOf  its-core:ITSDataProperty;
-    rdfs:domain its-core:CodeList ;
-    rdfs:range xsd:date ;
+:hasUrl a owl:DatatypeProperty;
+    skos:definition     "The URL associated with the object.";
+    rdfs:subPropertyOf  :ITSDataProperty;
+    schema:rangeIncludes          xsd:anyURI .
+
+:hasVersion a owl:DatatypeProperty;
+    rdfs:subPropertyOf  :ITSDataProperty;
+    skos:definition     "The version of the object." .
+
+:issuedOn a owl:DatatypeProperty ;
+    rdfs:subPropertyOf  :ITSDataProperty;
+    schema:domainIncludes :OfficialThing ;
+    schema:rangeIncludes xsd:date ;
+    skos:definition "The date the OfficialThing was issued."@en ;
+    skos:example "2026-01-01"@en .
+
+:lastModified a owl:DatatypeProperty ;
+    rdfs:subPropertyOf  :ITSDataProperty;
+    schema:domainIncludes :CodeList ;
+    schema:rangeIncludes xsd:date ;
     skos:definition "Date the code list was last modified."@en .
 
-# Classes
-its-core:ITSThing a owl:Class;
+# ================================================
+#                 Classes
+# ================================================
+
+:ITSThing a owl:Class;
     skos:definition  "A class to organize all classes defined in all recognized ITS Ontologies." .
 
-its-core:ActivationStatusCode a owl:Class;
+:ActivationStatusCode a owl:Class;
     skos:definition  "A code indicating the activation status of an object";
     skos:example     "active, beingSetUp, beingShutDown, inactive, scheduled";
-    rdfs:subClassOf  its-core:ITSThing;
-    rdfs:subClassOf  its-core:Code .
+    rdfs:subClassOf  :ITSThing;
+    rdfs:subClassOf  :Code .
 
-its-core:Code
-    a owl:Class ;
-    skos:definition "A code value whose meaning is defined by membership in (or reference to) a code list."@en ;
-    rdfs:subClassOf  its-core:ITSThing;
-    rdfs:subClassOf  cdm2:Code .
-
-its-core:CodeList
-    a owl:Class ;
-    skos:definition "A curated set of codes (a code list), typically maintained and versioned by some entity."@en ;
-    rdfs:subClassOf  its-core:ITSThing.
-
-its-core:Angle
+:Angle
     rdf:type        owl:Class ;
-    rdfs:subClassOf its-core:ITSThing ;
+    rdfs:subClassOf :ITSThing ;
     rdfs:subClassOf i72:Quantity ;
     rdfs:subClassOf [
         owl:allValuesFrom [
@@ -172,41 +204,73 @@ its-core:Angle
     ] ;
     skos:definition "An angle defined by two lines."@en .
 
-its-core:AngleUnit
+:AngleUnit
     rdf:type        owl:Class ;
-    rdfs:subClassOf its-core:ITSThing ;
+    rdfs:subClassOf :ITSThing ;
     rdfs:subClassOf i72:Unit_of_measure ;
     skos:definition "A specified system of units for angles."@en .
 
-its-core:ComparisonOperatorCode
+:Bearing
     rdf:type        owl:Class ;
-    rdfs:subClassOf its-core:ITSThing ;
-    rdfs:subClassOf its-core:Code ;
-    skos:definition "A code representing a comparison operator."@en ;
-    skos:example     "equals, not equals, greater than, less than, greater than or equal to, less than or equal to"@en .
-
-its-core:Direction
-    rdf:type        owl:Class ;
-    rdfs:subClassOf its-core:ITSThing ;
-    skos:definition "The orientation of a line or movement."@en .
-
-its-core:Bearing
-    rdf:type        owl:Class ;
-    rdfs:subClassOf its-core:Direction ;
-    rdfs:subClassOf its-core:Angle ;
+    rdfs:subClassOf :Direction ;
+    rdfs:subClassOf :Angle ;
     skos:definition "The orientation of a line or movement, measured from north (0°) clockwise."@en ;
     skos:example    "0°, 90°, 180°, 270°, 360°"@en .
 
-its-core:DirectionCode
+:Code
+    a owl:Class ;
+    skos:definition "A code value whose meaning is defined by membership in (or reference to) a code list."@en ;
+    rdfs:subClassOf  :ITSThing;
+    rdfs:subClassOf  cdm2:Code .
+
+:CodeList
+    a owl:Class ;
+    skos:definition "A curated set of codes (a code list), maintained and versioned by some entity."@en ;
+    rdfs:subClassOf  :OfficialThing ;
+    rdfs:subClassOf  :VersionedThing ;
+    rdfs:subClassOf [
+        rdf:type                    owl:Restriction ;
+        owl:onProperty              cdm1:hasComponent ;
+        owl:minQualifiedCardinality    "1"^^xsd:nonNegativeInteger ;
+        owl:class                   :Code ;
+    ] ;
+    skos:definition "A curated set of codes (a code list), maintained and versioned by some entity."@en .
+
+:ComparisonOperatorCode
     rdf:type        owl:Class ;
-    rdfs:subClassOf its-core:Direction ;
-    rdfs:subClassOf its-core:Code ;
+    rdfs:subClassOf :ITSThing ;
+    rdfs:subClassOf :Code ;
+    skos:definition "A code representing a comparison operator."@en ;
+    skos:example     "equals, not equals, greater than, less than, greater than or equal to, less than or equal to"@en .
+
+:Direction
+    rdf:type        owl:Class ;
+    rdfs:subClassOf :ITSThing ;
+    skos:definition "The orientation of a line or movement."@en .
+
+:DirectionCode
+    rdf:type        owl:Class ;
+    rdfs:subClassOf :Direction ;
+    rdfs:subClassOf :Code ;
     skos:definition "A code representing orientation of a line or movement."@en ;
     skos:example     "north, inbound, positive, clockwise"@en .
 
-its-core:VersionedThing
+:OfficialThing
     rdf:type        owl:Class ;
-    rdfs:subClassOf its-core:ITSThing ;
+    rdfs:subClassOf :ITSThing ;
+    dash:abstract "true" ;
+    rdfs:subClassOf [   
+        rdf:type                    owl:Restriction ;
+        owl:onProperty              cdm1:issuingAuthority ;
+        owl:qualifiedCardinality    "1"^^xsd:nonNegativeInteger ;
+        owl:class                   cdm1:Agent ;
+    ] ;
+    skos:definition "An item that is officially issued by an Agent."@en .
+
+:VersionedThing
+    rdf:type        owl:Class ;
+    rdfs:subClassOf :ITSThing ;
+    dash:abstract "true" ;
     rdfs:subClassOf cdm1:Manifestation ;
     rdfs:subClassOf [
         rdf:type                    owl:Restriction ;

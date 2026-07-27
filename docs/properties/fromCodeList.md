@@ -4,10 +4,6 @@
 
 Associates a code with the code list that defines it.
 
-**Domain**: [Code](../classes/Code.md)
-
-**Range**: [CodeList](../classes/CodeList.md)
-
 ## Used in classes
 
 | Class |

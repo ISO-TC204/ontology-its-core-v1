@@ -2,29 +2,43 @@ site_name: ITS Ontology - Core
 site_description: An site explaining core concepts within the overall set of ITS ontologies.
 repo_url: https://github.com/ISO-TC204/ontology-its-core
 nav:
-- Home: index.md
-- Classes:
-  - Activation Status Code: classes/ActivationStatusCode.md
-  - Angle: classes/Angle.md
-  - Angle Unit: classes/AngleUnit.md
-  - Bearing: classes/Bearing.md
-  - Code: classes/Code.md
-  - Code List: classes/CodeList.md
-  - Comparison Operator Code: classes/ComparisonOperatorCode.md
-  - Direction: classes/Direction.md
-  - Direction Code: classes/DirectionCode.md
-  - Versioned Thing: classes/VersionedThing.md
-- Properties:
-  - codeValue: properties/codeValue.md
-  - fromCodeList: properties/fromCodeList.md
-  - hasActivationStatus: properties/hasActivationStatus.md
-  - hasJurisdiction: properties/hasJurisdiction.md
-  - hasMaintainer: properties/hasMaintainer.md
-  - hasName: properties/hasName.md
-  - hasRegisteredCode: properties/hasRegisteredCode.md
-  - ITSObjectProperty: properties/ITSObjectProperty.md
-  - lastModified: properties/lastModified.md
-  - managedBy: properties/managedBy.md
+- TC204 on ISO.org: https://www.iso.org/committee/54706.html
+- TC 204 Home: https://isotc204.org/
+- RITSO Home: https://isotc204.org/ritso/
+- ITS Ontology - Core:
+  - Home: index.md
+  - Classes:
+    - Activation Status Code: classes/ActivationStatusCode.md
+    - Angle: classes/Angle.md
+    - Angle Unit: classes/AngleUnit.md
+    - Bearing: classes/Bearing.md
+    - Code: classes/Code.md
+    - Code List: classes/CodeList.md
+    - Comparison Operator Code: classes/ComparisonOperatorCode.md
+    - Direction: classes/Direction.md
+    - Direction Code: classes/DirectionCode.md
+    - Its Thing: classes/ITSThing.md
+    - Official Thing: classes/OfficialThing.md
+    - Versioned Thing: classes/VersionedThing.md
+  - Properties:
+    - codeValue: properties/codeValue.md
+    - enteredBy: properties/enteredBy.md
+    - enteredOn: properties/enteredOn.md
+    - fromCodeList: properties/fromCodeList.md
+    - hasActivationStatus: properties/hasActivationStatus.md
+    - hasImage: properties/hasImage.md
+    - hasJurisdiction: properties/hasJurisdiction.md
+    - hasMaintainer: properties/hasMaintainer.md
+    - hasName: properties/hasName.md
+    - hasRegisteredCode: properties/hasRegisteredCode.md
+    - hasUrl: properties/hasUrl.md
+    - hasVersion: properties/hasVersion.md
+    - issuedOn: properties/issuedOn.md
+    - issuingAuthority: properties/issuingAuthority.md
+    - ITSDataProperty: properties/ITSDataProperty.md
+    - ITSObjectProperty: properties/ITSObjectProperty.md
+    - lastModified: properties/lastModified.md
+    - managedBy: properties/managedBy.md
 site_url: https://isotc204.org/ontology-its-core
 copyright: <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/">
   <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank"
@@ -40,6 +54,8 @@ theme:
   - content.tooltips
   - icons
   - navigation.path
+  - navigation.tabs
+  - navigation.tabs.sticky
   - navigation.top
   icon:
     repo: fontawesome/brands/github

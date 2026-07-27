@@ -4,6 +4,4 @@
 
 The activation status of the object.
 
-**Range**: [ActivationStatusCode](../classes/ActivationStatusCode.md)
-
 **IRI**: `https://w3id.org/itsdata/core/v1/hasActivationStatus`
