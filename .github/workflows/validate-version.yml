@@ -1,0 +1,24 @@
+name: Validate VERSION
+
+# Required status check for PRs (including from forks).
+# Enforces VERSION / RELEASES rules before merge.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  validate-version:
+    name: validate-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Validate VERSION against RELEASES
+        run: python3 scripts/versioning.py validate

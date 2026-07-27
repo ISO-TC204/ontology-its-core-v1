@@ -51,11 +51,13 @@ A class to organize all classes defined in all recognized ITS Ontologies.
 | [Bearing](Bearing.md) | The orientation of a line or movement, measured from north (0°) clockwise. |
 | [Bearing](Bearing.md) | The orientation of a line or movement, measured from north (0°) clockwise. |
 | [Code](Code.md) | A code value whose meaning is defined by membership in (or reference to) a code list. |
-| [Code List](CodeList.md) | A curated set of codes (a code list), typically maintained and versioned by some entity. |
+| [Code List](CodeList.md) | A curated set of codes (a code list), maintained and versioned by some entity. |
+| [Code List](CodeList.md) | A curated set of codes (a code list), maintained and versioned by some entity. |
 | [Comparison Operator Code](ComparisonOperatorCode.md) | A code representing a comparison operator. |
 | [Comparison Operator Code](ComparisonOperatorCode.md) | A code representing a comparison operator. |
 | [Direction](Direction.md) | The orientation of a line or movement. |
 | [Direction Code](DirectionCode.md) | A code representing orientation of a line or movement. |
 | [Direction Code](DirectionCode.md) | A code representing orientation of a line or movement. |
+| [Official Thing](OfficialThing.md) | An item that is officially issued by an Agent. |
 | [Versioned Thing](VersionedThing.md) | An identifiable version of a managed object. |
 

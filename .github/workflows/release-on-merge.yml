@@ -1,0 +1,75 @@
+name: Apply VERSION and publish release
+
+# After merge to main: stamp TTL (ontology releases), append RELEASES,
+# commit if needed, and create a GitHub Release/tag for mike/web deploy.
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: apply-and-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Collect existing tags
+        id: tags
+        run: |
+          git fetch --tags --force
+          {
+            echo "list<<EOF"
+            git tag -l
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Apply VERSION (stamp TTL / append RELEASES)
+        id: apply
+        run: |
+          TAGS=$(git tag -l | paste -sd, -)
+          python3 scripts/versioning.py apply --existing-tags "$TAGS"
+
+      - name: Commit stamped metadata
+        id: commit
+        if: steps.apply.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add RELEASES docs/its-core.ttl docs/CoreSHACL.ttl
+          if git diff --staged --quiet; then
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+            echo "No additional file changes to commit"
+          else
+            git commit -m "chore(release): ${{ steps.apply.outputs.tag }} metadata"
+            git push
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub Release
+        if: steps.apply.outputs.changed == 'true' && steps.apply.outputs.tag != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.apply.outputs.tag }}
+          name: ${{ steps.apply.outputs.tag }}
+          target_commitish: ${{ steps.commit.outputs.sha || github.sha }}
+          prerelease: ${{ steps.apply.outputs.prerelease == 'true' }}
+          generate_release_notes: true
+          body: |
+            Automated release from `VERSION`.
+
+            - kind: `${{ steps.apply.outputs.kind }}`
+            - version: `${{ steps.apply.outputs.version }}`
+            - tag: `${{ steps.apply.outputs.tag }}`

@@ -5,26 +5,34 @@ digraph {
 	edge [fontname=Arial fontsize=11]
 	{
 		rank=source
-		i72_Quantity [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">i72:Quantity</TD></TR></TABLE>> URL="https://w3id.org/itsdata/i72/v1/Quantity" margin=0]
+		i72_Quantity [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">i72:Quantity</TD></TR></TABLE>> URL="https://w3id.org/citydata/21972/v1/Quantity" margin=0]
 		ITSThing [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">ITSThing</TD></TR></TABLE>> URL="../ITSThing" margin=0]
 	}
-	Angle [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">Angle</TD></TR><TR><TD ALIGN="LEFT">i72:hasUnit [1]</TD></TR><TR><TD ALIGN="LEFT">i72:hasValue : xsd:decimal [1]</TD></TR></TABLE>> URL="../Angle" margin=0]
+	Angle [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">Angle</TD></TR></TABLE>> URL="../Angle" margin=0]
 	{
 		rank=max
 	}
 	subgraph cluster_associated {
 		label="" style=invis
 		Invis [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD></TD></TR></TABLE>> margin=0 style=invis]
-		i72_Measure [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">i72:Measure</TD></TR></TABLE>> URL="https://w3id.org/itsdata/i72/v1/Measure" margin=0]
+		AngleUnit [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">AngleUnit</TD></TR></TABLE>> URL="../AngleUnit" margin=0]
+		i72_Measure [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">i72:Measure</TD></TR></TABLE>> URL="https://w3id.org/citydata/21972/v1/Measure" margin=0]
+		owl_Thing [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">owl:Thing</TD></TR></TABLE>> URL="https://w3id.org/citydata/imported/owl/latest/Thing" margin=0]
 	}
 	Angle -> i72_Quantity [arrowhead=onormal style=solid]
 	Angle -> ITSThing [arrowhead=onormal style=solid]
 	Angle -> Invis [style=invis]
-	Invis -> i72_Measure [style=invis]
-	ndc68c3ddb8a24710a1c0c38a2a6085beb2 [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1" BGCOLOR="lightyellow"><TR><TD ALIGN="CENTER">«intersectionOf»</TD></TR></TABLE>> margin=0]
-	i72_Measure [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">i72:Measure</TD></TR></TABLE>> URL="https://w3id.org/itsdata/i72/v1/Measure" margin=0]
-	ndc68c3ddb8a24710a1c0c38a2a6085beb2 -> i72_Measure [label=member arrowhead=normal style=dotted]
-	ndc68c3ddb8a24710a1c0c38a2a6085beb3 [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1" BGCOLOR="lightyellow"><TR><TD ALIGN="CENTER">ComplexExpr</TD></TR></TABLE>> margin=0]
-	ndc68c3ddb8a24710a1c0c38a2a6085beb2 -> ndc68c3ddb8a24710a1c0c38a2a6085beb3 [label=member arrowhead=normal style=dotted]
-	Angle -> ndc68c3ddb8a24710a1c0c38a2a6085beb2 [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white"><TR><TD ALIGN="CENTER">i72:value</TD></TR></TABLE>> arrowhead=normal style=solid]
+	Invis -> AngleUnit [style=invis]
+	AngleUnit -> i72_Measure [style=invis]
+	i72_Measure -> owl_Thing [style=invis]
+	n6ad4303373fc4c16bb8b5dce467ff00cb2 [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1" BGCOLOR="lightyellow"><TR><TD ALIGN="CENTER">«intersectionOf»</TD></TR></TABLE>> margin=0]
+	i72_Measure [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">i72:Measure</TD></TR></TABLE>> URL="https://w3id.org/citydata/21972/v1/Measure" margin=0]
+	n6ad4303373fc4c16bb8b5dce467ff00cb2 -> i72_Measure [label=member arrowhead=normal style=dotted]
+	n6ad4303373fc4c16bb8b5dce467ff00cb3 [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1" BGCOLOR="lightyellow"><TR><TD ALIGN="CENTER">ComplexExpr</TD></TR></TABLE>> margin=0]
+	n6ad4303373fc4c16bb8b5dce467ff00cb2 -> n6ad4303373fc4c16bb8b5dce467ff00cb3 [label=member arrowhead=normal style=dotted]
+	Angle -> n6ad4303373fc4c16bb8b5dce467ff00cb2 [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white"><TR><TD ALIGN="CENTER">redefines</TD></TR><TR><TD ALIGN="CENTER">i72:value</TD></TR></TABLE>> arrowhead=normal style=dashed]
+	owl_Thing [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">owl:Thing</TD></TR></TABLE>> URL="https://w3id.org/citydata/imported/owl/latest/Thing" margin=0]
+	Angle -> owl_Thing [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white"><TR><TD ALIGN="CENTER">i72:hasValue</TD></TR><TR><TD ALIGN="CENTER">1</TD></TR></TABLE>> arrowhead=normal style=solid]
+	AngleUnit [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1"><TR><TD BGCOLOR="lightgray" ALIGN="CENTER">AngleUnit</TD></TR></TABLE>> URL="../AngleUnit" margin=0]
+	Angle -> AngleUnit [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white"><TR><TD ALIGN="CENTER">i72:hasUnit</TD></TR><TR><TD ALIGN="CENTER">1</TD></TR></TABLE>> arrowhead=normal style=solid]
 }

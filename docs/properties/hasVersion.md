@@ -8,6 +8,6 @@ The version of the object.
 
 | Class |
 |-------|
-| [CodeList](../classes/CodeList.md) |
+| [VersionedThing](../classes/VersionedThing.md) |
 
 **IRI**: `https://w3id.org/itsdata/core/v1/hasVersion`
