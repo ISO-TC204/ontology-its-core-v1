@@ -254,6 +254,28 @@ def max_release_date(records: Iterable[ReleaseRecord]) -> Optional[dt.date]:
     return max(dates) if dates else None
 
 
+def suggest_next_semver(latest: Optional[str], *, prerelease: bool = True) -> str:
+    """Suggest the next SemVer after latest (default: bump pre-release or patch-pre)."""
+    if not latest:
+        return "0.0.1-alpha.1" if prerelease else "0.0.1"
+    cur = SemVer.parse(latest)
+    if prerelease:
+        if cur.prerelease:
+            # bump last numeric id if present, else append .1
+            pre = list(cur.prerelease)
+            if pre and pre[-1].isdigit():
+                pre[-1] = str(int(pre[-1]) + 1)
+            else:
+                pre.append("1")
+            return SemVer(cur.major, cur.minor, cur.patch, tuple(pre)).text
+        # turn 1.2.3 into 1.2.4-alpha.1
+        return SemVer(cur.major, cur.minor, cur.patch + 1, ("alpha", "1")).text
+    if cur.prerelease:
+        # next full release of same X.Y.Z
+        return SemVer(cur.major, cur.minor, cur.patch).text
+    return SemVer(cur.major, cur.minor, cur.patch + 1).text
+
+
 def validate(
     version_path: Path = VERSION_PATH, releases_path: Path = RELEASES_PATH
 ) -> VersionFile:
@@ -270,7 +292,8 @@ def validate(
             )
         if normalize_semver(vf.version) != normalize_semver(latest):
             raise ValueError(
-                f"doc-only PR must keep version: {latest} (VERSION has {vf.version})"
+                f"doc-only PR must keep version: {latest} (VERSION has {vf.version}). "
+                f"Do not bump SemVer for documentation-only changes."
             )
         if max_date is not None and vf.doc_only < max_date:
             raise ValueError(
@@ -284,11 +307,14 @@ def validate(
         return vf
 
     if latest is not None and not (vf.semver > SemVer.parse(latest)):
+        suggested = suggest_next_semver(latest, prerelease=True)
         raise ValueError(
-            f"version {vf.version} must be > latest RELEASES SemVer {latest}"
+            f"VERSION {vf.version} must be > latest release {latest} "
+            f"(from the PR base RELEASES). Suggested next line:\n"
+            f"  version: {suggested}"
         )
     kind = "pre-release" if vf.is_prerelease else "full release"
-    print(f"OK: ontology {kind} {vf.version}")
+    print(f"OK: ontology {kind} {vf.version} (latest on base was {latest or 'none'})")
     return vf
 
 
@@ -441,13 +467,26 @@ def ontology_tag(version: str) -> str:
     return f"v{normalize_semver(version)}"
 
 
-def cmd_validate(_args: argparse.Namespace) -> int:
+def cmd_validate(args: argparse.Namespace) -> int:
     try:
-        validate()
+        releases = Path(args.releases) if getattr(args, "releases", "") else RELEASES_PATH
+        validate(version_path=VERSION_PATH, releases_path=releases)
     except Exception as e:
         print(f"ERROR: {e}", file=sys.stderr)
         return 1
     return 0
+
+
+def cmd_suggest(args: argparse.Namespace) -> int:
+    try:
+        releases = Path(args.releases) if args.releases else RELEASES_PATH
+        records = parse_releases(releases)
+        latest = latest_semver(records)
+        print(suggest_next_semver(latest, prerelease=not args.full))
+        return 0
+    except Exception as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 1
 
 
 def _tag_for(vf: VersionFile, existing_tags: Iterable[str]) -> str:
@@ -539,8 +578,28 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="cmd", required=True)
 
-    p_val = sub.add_parser("validate", help="Validate VERSION against RELEASES")
+    p_val = sub.add_parser(
+        "validate",
+        help="Validate VERSION against RELEASES (use --releases for the PR base copy)",
+    )
+    p_val.add_argument(
+        "--releases",
+        default="",
+        help="Path to RELEASES to compare against (default: ./RELEASES)",
+    )
     p_val.set_defaults(func=cmd_validate)
+
+    p_sug = sub.add_parser(
+        "suggest",
+        help="Print a suggested next SemVer based on RELEASES",
+    )
+    p_sug.add_argument("--releases", default="")
+    p_sug.add_argument(
+        "--full",
+        action="store_true",
+        help="Suggest a full release instead of a pre-release",
+    )
+    p_sug.set_defaults(func=cmd_suggest)
 
     p_apply = sub.add_parser(
         "apply",
